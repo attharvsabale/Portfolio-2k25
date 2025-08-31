@@ -130,7 +130,7 @@ let engine;
 let world;
 let items = [];
 let canvas;
-let isTestimonialsVisible = false; // The new variable to track visibility
+let isTestimonialsVisible = false; 
 
 // --- Data for Testimonials ---
 const testimonialData = {
@@ -147,9 +147,7 @@ const testimonialData = {
 };
 
 
-/**
- * Main setup function, runs once.
- */
+
 function setup() {
     const testimonialsSection = document.querySelector('.testimonials-section');
     if (!testimonialsSection) return;
@@ -157,12 +155,12 @@ function setup() {
     canvas = createCanvas(window.innerWidth, window.innerHeight);
     canvas.parent(testimonialsSection);
 
-    // ✅ NEW: Set up the Intersection Observer
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             isTestimonialsVisible = entry.isIntersecting;
         });
-    }, { threshold: 0.1 }); // Triggers when 10% of the section is visible
+    }, { threshold: 0.1 }); 
 
     observer.observe(testimonialsSection);
 
@@ -173,10 +171,10 @@ function setup() {
  * p5.js draw loop, runs continuously.
  */
 function draw() {
-    // ✅ NEW: This check pauses the entire simulation when off-screen
+    
     if (!engine || !isTestimonialsVisible) return;
 
-    clear(); // Transparent background
+    clear();
     Engine.update(engine);
     items.forEach((item) => item.update());
 }
@@ -212,13 +210,11 @@ function initializeSimulation() {
     for (let i = 0; i < itemCount; i++) {
         let x = random(xMin, xMax);
         let y = random(100, height - 250);
-        items.push(new Item(x, y, `./assets/img${i + 1}.jpg`, testimonialData.names[i], testimonialData.messages[i], testimonialData.colors[i]));
+       items.push(new Item(x, y, `./assets/img${i + 1}.jpg`, `${testimonialData.names[i]} says:`, testimonialData.names[i], testimonialData.messages[i], testimonialData.colors[i]));
     }
 }
 
-/**
- * Safely removes all old items from the DOM and the physics world.
- */
+
 function cleanupSimulation() {
     const existingItems = document.querySelectorAll('.testimonials-section .item');
     existingItems.forEach(item => item.remove());
@@ -227,9 +223,7 @@ function cleanupSimulation() {
     items = [];
 }
 
-/**
- * Adds static wall boundaries to the world.
- */
+
 // function addBoundaries() {
 //     const thickness = 100;
 //     World.add(world, [
@@ -244,22 +238,16 @@ function cleanupSimulation() {
 function addBoundaries() {
   const thickness = 100;
   World.add(world, [
-    // Top wall (moved inside)
     Bodies.rectangle(width / 2, 0 + (thickness / 2), width, thickness, { isStatic: true }),
-    // Bottom wall (moved inside)
     Bodies.rectangle(width / 2, height - (thickness / 2), width, thickness, { isStatic: true }),
-    // Left wall (moved inside)
     Bodies.rectangle(0 + (thickness / 2), height / 2, thickness, height, { isStatic: true }),
-    // Right wall (moved inside)
     Bodies.rectangle(width - (thickness / 2), height / 2, thickness, height, { isStatic: true }),
   ]);
 }
 
 
 
-/**
- * The Item class, responsible for a single testimonial card.
- */
+
 class Item {
     constructor(x, y, imagePath, name, text, color) {
         const screenWidth = window.innerWidth;
