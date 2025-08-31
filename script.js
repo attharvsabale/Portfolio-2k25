@@ -118,8 +118,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
+
 /* ==========================================================================
-   Matter.js Testimonials Section - OPTIMIZED VERSION
+   Matter.js Testimonials Section - Fully Responsive & Foldable-Proof
    ========================================================================== */
 
 const Engine = Matter.Engine;
@@ -131,7 +133,6 @@ let engine;
 let world;
 let items = [];
 let canvas;
-let isTestimonialsVisible = false; // The new variable to track visibility
 
 // --- Data for Testimonials ---
 const testimonialData = {
@@ -155,64 +156,56 @@ function setup() {
     const testimonialsSection = document.querySelector('.testimonials-section');
     if (!testimonialsSection) return;
 
+    // Create and attach the canvas
     canvas = createCanvas(window.innerWidth, window.innerHeight);
     canvas.parent(testimonialsSection);
 
-    // ✅ NEW: Set up the Intersection Observer
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            isTestimonialsVisible = entry.isIntersecting;
-        });
-    }, { threshold: 0.1 }); // Triggers when 10% of the section is visible
-
-    observer.observe(testimonialsSection);
-
+    // Initialize the entire simulation
     initializeSimulation();
 }
 
 /**
- * p5.js draw loop, runs continuously.
- */
-function draw() {
-    // ✅ NEW: This check pauses the entire simulation when off-screen
-    if (!engine || !isTestimonialsVisible) return;
-
-    clear(); // Transparent background
-    Engine.update(engine);
-    items.forEach((item) => item.update());
-}
-
-/**
  * Clears and re-builds the entire physics simulation.
+ * This is the core of the responsive fix.
  */
 function initializeSimulation() {
+    // 1. Clean up any existing simulation
     cleanupSimulation();
+
+    // 2. Create a new engine and world
     engine = Engine.create();
     world = engine.world;
     world.gravity.y = 0;
+
+    // 3. Add boundaries for the new screen size
     addBoundaries();
 
+    // 4. Determine item count and dimensions based on screen size
     const screenWidth = window.innerWidth;
     let itemCount, itemW;
 
-    if (screenWidth <= 480) {
+    if (screenWidth <= 480) {        
+        // console.log("Using Folded Phone Layout");
         itemCount = 5;
-        itemW = 180;
-    } else if (screenWidth <= 1024) {
+        itemW = 180; 
+    } else if (screenWidth <= 1024) { 
+        console.log("Using Tablet/Handheld Layout");
         itemCount = 6;
         itemW = 250;
-    } else {
+    } else {                         
+        console.log("Using Desktop Layout");
         itemCount = 12;
         itemW = 300;
     }
 
+    // 5. Create new items with safer spawning logic
     const spawnPadding = 20;
     const xMin = (itemW / 2) + spawnPadding;
     const xMax = screenWidth - (itemW / 2) - spawnPadding;
 
     for (let i = 0; i < itemCount; i++) {
         let x = random(xMin, xMax);
-        let y = random(100, height - 250);
+        let y = random(100, height - 250); // Keep away from top/bottom edges
         items.push(new Item(x, y, `./assets/img${i + 1}.jpg`, testimonialData.names[i], testimonialData.messages[i], testimonialData.colors[i]));
     }
 }
@@ -221,10 +214,15 @@ function initializeSimulation() {
  * Safely removes all old items from the DOM and the physics world.
  */
 function cleanupSimulation() {
+    // Remove all old DOM elements
     const existingItems = document.querySelectorAll('.testimonials-section .item');
     existingItems.forEach(item => item.remove());
+
+    // Clear the Matter.js world if it exists
     if (world) World.clear(world);
     if (engine) Engine.clear(engine);
+    
+    // Clear our items array
     items = [];
 }
 
@@ -242,49 +240,59 @@ function addBoundaries() {
 }
 
 /**
+ * p5.js draw loop, runs continuously.
+ */
+function draw() {
+    if (!engine) return;
+    clear(); // Transparent background
+    Engine.update(engine);
+    items.forEach((item) => item.update());
+}
+
+
+/**
  * The Item class, responsible for a single testimonial card.
  */
 class Item {
     constructor(x, y, imagePath, name, text, color) {
+        // UPDATED LOGIC: Use a vertical layout for folded phones
         const screenWidth = window.innerWidth;
-        if (screenWidth <= 480) {
-            this.itemW = 180;
+        if (screenWidth <= 480) {         // Folded Phone (very narrow)
+            this.itemW = 180; // Taller than wide
             this.itemH = 240;
-        } else if (screenWidth <= 1024) {
+        } else if (screenWidth <= 1024) { // Tablet / Unfolded Phone
             this.itemW = 250;
             this.itemH = 100;
-        } else {
+        } else {                          // Desktop
             this.itemW = 300;
             this.itemH = 120;
         }
+        // console.log(`Creating item with size: ${this.itemW}x${this.itemH}`);
 
         let options = {
-            frictionAir: 0.075,
-            restitution: 0.25,
-            density: 0.002,
-            angle: Math.random() * Math.PI * 2,
+            frictionAir: 0.075, restitution: 0.25,
+            density: 0.002, angle: Math.random() * Math.PI * 2,
         };
 
         this.body = Bodies.rectangle(x, y, this.itemW, this.itemH, options);
         World.add(world, this.body);
 
+        // --- Create DOM Element ---
         this.div = document.createElement("div");
         this.div.className = "item";
         this.div.style.position = "absolute";
 
         const img = document.createElement("img");
-        img.src = imagePath;
-        this.div.appendChild(img);
+        img.src = imagePath; this.div.appendChild(img);
         const h1 = document.createElement("h1");
-        h1.style.color = color;
-        h1.innerText = name;
-        this.div.appendChild(h1);
+        h1.style.color = color; h1.innerText = name; this.div.appendChild(h1);
         const p = document.createElement("p");
         p.innerText = text;
         if (screenWidth <= 1024) {
-            p.style.marginTop = "5px";
+            p.style.marginTop = "5px"; // Add margin on handheld devices
         }
         this.div.appendChild(p);
+
         document.querySelector(".testimonials-section").appendChild(this.div);
         this.div.addEventListener("click", () => this.showPopup(imagePath, name, text, color));
     }
@@ -296,6 +304,7 @@ class Item {
     }
 
     showPopup(imagePath, name, text, color) {
+        // (This function remains the same)
         const overlay = document.createElement("div");
         overlay.className = "popup-overlay";
         overlay.addEventListener("click", (e) => {
@@ -304,20 +313,15 @@ class Item {
         const card = document.createElement("div");
         card.className = "popup-card";
         const closeBtn = document.createElement("span");
-        closeBtn.className = "close-btn";
-        closeBtn.innerHTML = "&times;";
+        closeBtn.className = "close-btn"; closeBtn.innerHTML = "&times;";
         closeBtn.onclick = () => overlay.remove();
         const img = document.createElement("img");
         img.src = imagePath;
         const h1 = document.createElement("h1");
-        h1.innerText = name;
-        h1.style.color = color;
+        h1.innerText = name; h1.style.color = color;
         const p = document.createElement("p");
         p.innerText = text;
-        card.appendChild(closeBtn);
-        card.appendChild(img);
-        card.appendChild(h1);
-        card.appendChild(p);
+        card.appendChild(closeBtn); card.appendChild(img); card.appendChild(h1); card.appendChild(p);
         overlay.appendChild(card);
         document.body.appendChild(overlay);
     }
@@ -330,33 +334,24 @@ function applyForce(x, y) {
     items.forEach((item) => {
         let d = dist(x, y, item.body.position.x, item.body.position.y);
         if (d < 300) {
-            let dx = item.body.position.x - x;
-            let dy = item.body.position.y - y;
+            let dx = item.body.position.x - x; let dy = item.body.position.y - y;
             let mag = Math.sqrt(dx * dx + dy * dy) || 1;
-            dx /= mag;
-            dy /= mag;
+            dx /= mag; dy /= mag;
             let forceMagnitude = 0.2;
             Body.applyForce(item.body, { x: item.body.position.x, y: item.body.position.y }, { x: dx * forceMagnitude, y: dy * forceMagnitude });
         }
     });
 }
 
-function mouseMoved() {
-    if (isTestimonialsVisible) {
-        applyForce(mouseX, mouseY);
-    }
-}
+function mouseMoved() { applyForce(mouseX, mouseY); }
 
-function touchMoved(e) {
-    // ✅ NEW: Only prevent default and apply force if the canvas is visible
-    if (isTestimonialsVisible) {
-        e.preventDefault();
-        if (touches.length > 0) {
-            applyForce(touches[0].clientX, touches[0].clientY);
-        }
-        return false;
-    }
-}
+// function touchMoved(e) {
+//     e.preventDefault();
+//     if (touches.length > 0) {
+//         applyForce(touches[0].clientX, touches[0].clientY);
+//     }
+//     return false;
+// }
 
 /**
  * Debounce utility to prevent resize events from firing too often.
@@ -370,6 +365,7 @@ function debounce(func, delay) {
 }
 
 const debouncedResize = debounce(() => {
+    console.log("Window resized, re-initializing simulation.");
     resizeCanvas(window.innerWidth, window.innerHeight);
     initializeSimulation();
 }, 250);
@@ -377,6 +373,10 @@ const debouncedResize = debounce(() => {
 function windowResized() {
     debouncedResize();
 }
+
+
+
+
 
 
 
