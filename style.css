@@ -403,11 +403,12 @@ a{
 /* TESTIMONIALS SECTION STYLES */
 .testimonials-section {
     /* padding: 100px 80px; */
+    padding: 100px 0px;
     background-color: #FAFAFA;
     height: 100vh;
     width: 100vw;
     position: relative;
-        overflow: hidden;
+    overflow: hidden;
 }
  
 canvas {
