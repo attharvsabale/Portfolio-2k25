@@ -210,7 +210,7 @@ function initializeSimulation() {
     for (let i = 0; i < itemCount; i++) {
         let x = random(xMin, xMax);
         let y = random(100, height - 250);
-        items.push(new Item(x, y, `./assets/img${i + 1}.jpg`,  testimonialData.names[i],  testimonialData.names[i], testimonialData.messages[i], testimonialData.colors[i]));
+        items.push(new Item(x, y, `./assets/img${i + 1}.jpg`, testimonialData.names[i], testimonialData.messages[i], testimonialData.colors[i]));
     }
 }
 
