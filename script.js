@@ -346,16 +346,16 @@ function mouseMoved() {
     }
 }
 
-function touchMoved(e) {
-    // ✅ NEW: Only prevent default and apply force if the canvas is visible
-    if (isTestimonialsVisible) {
-        e.preventDefault();
-        if (touches.length > 0) {
-            applyForce(touches[0].clientX, touches[0].clientY);
-        }
-        return false;
-    }
-}
+// function touchMoved(e) {
+//     // ✅ NEW: Only prevent default and apply force if the canvas is visible
+//     if (isTestimonialsVisible) {
+//         e.preventDefault();
+//         if (touches.length > 0) {
+//             applyForce(touches[0].clientX, touches[0].clientY);
+//         }
+//         return false;
+//     }
+// }
 
 /**
  * Debounce utility to prevent resize events from firing too often.
