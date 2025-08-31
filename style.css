@@ -1141,7 +1141,7 @@ canvas {
     font-size: 16px;
   }
 
-  /* .bottom-branding {
+  .bottom-branding {
     flex-direction: column;
     align-items: center;
     left: 20px;
@@ -1149,23 +1149,9 @@ canvas {
     width: calc(100% - 40px);
     bottom: 30px;
     text-align: center;
-  } */
+  }
 
-
-
-.bottom-branding {
-  flex-direction: column;
-  align-items: center;
-  left: 20px;
-  right: 20px;
-  width: calc(100% - 40px);
-  /* OLD VALUE:
-    bottom: 30px; 
-  */
-  /* NEW, IMPROVED VALUE: */
-  bottom: calc(30px + env(safe-area-inset-bottom));
-  text-align: center;
-}
+  
 
   .branding-wrapper {
     flex-direction: column;
