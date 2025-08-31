@@ -1443,10 +1443,6 @@ canvas {
   and (-webkit-device-pixel-ratio: 3) {
 
     .bottom-branding {
-      /* This is a brute-force adjustment. 
-        Start with a large value like 85px and adjust 
-        it up or down until it looks right on your phone.
-      */
       bottom: 5px !important;
     }
 }
