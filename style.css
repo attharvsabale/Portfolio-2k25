@@ -1447,6 +1447,6 @@ canvas {
         Start with a large value like 85px and adjust 
         it up or down until it looks right on your phone.
       */
-      bottom: 10px !important;
+      bottom: 5px !important;
     }
 }
