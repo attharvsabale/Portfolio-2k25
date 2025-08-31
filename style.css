@@ -1151,6 +1151,54 @@ canvas {
     text-align: center;
   }
 
+
+
+   
+  /* REVISED HERO SECTION */
+  .hero-section {
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    /* Use 100svh for the 'small viewport height' to account for browser UI */
+    min-height: 100svh; 
+    /* Add padding at the bottom for the iPhone home bar */
+    padding-bottom: env(safe-area-inset-bottom);
+    box-sizing: border-box; /* Ensures padding is included in the height */
+  }
+
+  /* REVISED BOTTOM BRANDING */
+  .bottom-branding {
+    /* REMOVE the position, left, right, bottom properties */
+    /* position: absolute; */ /* <-- DELETE THIS IF IT EXISTS */
+    /* left: 20px; */ /* <-- DELETE THIS */
+    /* right: 20px; */ /* <-- DELETE THIS */
+    /* bottom: 30px; */ /* <-- DELETE THIS */
+    
+    /* ADD this to push the element to the bottom of the flex container */
+    margin-top: auto; 
+    
+    /* Keep your other styling */
+    width: 100%; /* Adjust width as it's no longer positioned */
+    display: flex; /* Helps in centering the content inside */
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 40px; /* Add some space above the branding */
+  }
+
+  /* You may need to slightly adjust margins on the CTA */
+  .hero-cta {
+    margin-top: 10vh; /* You might want to slightly reduce this value */
+    width: 100%;
+  }
+
+
+
+
+
+
+
+
   
 
   .branding-wrapper {
