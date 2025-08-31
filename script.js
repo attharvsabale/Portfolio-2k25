@@ -239,6 +239,7 @@ function addBoundaries() {
         Bodies.rectangle(width + thickness / 2, height / 2, thickness, height, { isStatic: true }),
     ]);
 }
+
 /**
  * The Item class, responsible for a single testimonial card.
  */
@@ -272,26 +273,17 @@ class Item {
 
         const img = document.createElement("img");
         img.src = imagePath;
+        this.div.appendChild(img);
         const h1 = document.createElement("h1");
         h1.style.color = color;
         h1.innerText = name;
+        this.div.appendChild(h1);
         const p = document.createElement("p");
         p.innerText = text;
         if (screenWidth <= 1024) {
             p.style.marginTop = "5px";
         }
-
-        // --- CHANGE #1: WRAP THE CONTENT TO PREVENT IT FROM FLIPPING ---
-        const contentWrapper = document.createElement("div");
-        this.contentDiv = contentWrapper; // Save a reference to the new wrapper
-
-        contentWrapper.appendChild(img);
-        contentWrapper.appendChild(h1);
-        contentWrapper.appendChild(p);
-
-        this.div.appendChild(contentWrapper); // Add the wrapper to the main card
-        // ---------------------------------------------------------------
-
+        this.div.appendChild(p);
         document.querySelector(".testimonials-section").appendChild(this.div);
         this.div.addEventListener("click", () => this.showPopup(imagePath, name, text, color));
     }
@@ -300,10 +292,6 @@ class Item {
         this.div.style.left = `${this.body.position.x - this.itemW / 2}px`;
         this.div.style.top = `${this.body.position.y - this.itemH / 2}px`;
         this.div.style.transform = `rotate(${this.body.angle}rad)`;
-
-        // --- CHANGE #2: ADD COUNTER-ROTATION TO KEEP CONTENT UPRIGHT ---
-        this.contentDiv.style.transform = `rotate(${-this.body.angle}rad)`;
-        // ---------------------------------------------------------------
     }
 
     showPopup(imagePath, name, text, color) {
@@ -358,17 +346,16 @@ function mouseMoved() {
     }
 }
 
-// --- CHANGE #3: RE-ENABLE TOUCH INTERACTION WITHOUT BLOCKING SCROLL ---
-function touchMoved(e) {
-    if (isTestimonialsVisible) {
-        // e.preventDefault(); // This is kept commented out to allow scrolling
-        if (touches.length > 0) {
-            applyForce(touches[0].clientX, touches[0].clientY);
-        }
-        return false;
-    }
-}
-// ---------------------------------------------------------------------
+// function touchMoved(e) {
+//     // ✅ NEW: Only prevent default and apply force if the canvas is visible
+//     if (isTestimonialsVisible) {
+//         e.preventDefault();
+//         if (touches.length > 0) {
+//             applyForce(touches[0].clientX, touches[0].clientY);
+//         }
+//         return false;
+//     }
+// }
 
 /**
  * Debounce utility to prevent resize events from firing too often.
@@ -389,6 +376,7 @@ const debouncedResize = debounce(() => {
 function windowResized() {
     debouncedResize();
 }
+
 
 
 
