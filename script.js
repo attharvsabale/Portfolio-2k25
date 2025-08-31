@@ -230,15 +230,32 @@ function cleanupSimulation() {
 /**
  * Adds static wall boundaries to the world.
  */
+// function addBoundaries() {
+//     const thickness = 100;
+//     World.add(world, [
+//         Bodies.rectangle(width / 2, -thickness / 2, width, thickness, { isStatic: true }),
+//         Bodies.rectangle(width / 2, height + thickness / 2, width, thickness, { isStatic: true }),
+//         Bodies.rectangle(-thickness / 2, height / 2, thickness, height, { isStatic: true }),
+//         Bodies.rectangle(width + thickness / 2, height / 2, thickness, height, { isStatic: true }),
+//     ]);
+// }
+
+
 function addBoundaries() {
-    const thickness = 100;
-    World.add(world, [
-        Bodies.rectangle(width / 2, -thickness / 2, width, thickness, { isStatic: true }),
-        Bodies.rectangle(width / 2, height + thickness / 2, width, thickness, { isStatic: true }),
-        Bodies.rectangle(-thickness / 2, height / 2, thickness, height, { isStatic: true }),
-        Bodies.rectangle(width + thickness / 2, height / 2, thickness, height, { isStatic: true }),
-    ]);
+  const thickness = 100;
+  World.add(world, [
+    // Top wall (moved inside)
+    Bodies.rectangle(width / 2, 0 + (thickness / 2), width, thickness, { isStatic: true }),
+    // Bottom wall (moved inside)
+    Bodies.rectangle(width / 2, height - (thickness / 2), width, thickness, { isStatic: true }),
+    // Left wall (moved inside)
+    Bodies.rectangle(0 + (thickness / 2), height / 2, thickness, height, { isStatic: true }),
+    // Right wall (moved inside)
+    Bodies.rectangle(width - (thickness / 2), height / 2, thickness, height, { isStatic: true }),
+  ]);
 }
+
+
 
 /**
  * The Item class, responsible for a single testimonial card.

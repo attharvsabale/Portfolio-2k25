@@ -972,7 +972,6 @@ canvas {
   }
 
   .faq-section {
-    margin-top: 12vh;
     padding: 120px 20px;
     background-color: #FAFAFA;
   }
@@ -1321,7 +1320,7 @@ canvas {
 
 
   .faq-section {
-    margin-top: 15vh;
+    margin-top: -20vh;
     padding: 150px 10px;
     background-color: #FAFAFA;
     margin-left: 1vh;
