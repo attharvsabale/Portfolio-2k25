@@ -1147,7 +1147,7 @@ canvas {
     left: 20px;
     right: 20px;
     width: calc(100% - 40px);
-    bottom: calc(30px + env(safe-area-inset-bottom));
+    bottom: 30px;
     text-align: center;
   }
 
